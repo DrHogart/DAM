@@ -40,7 +40,7 @@ SAM_IN="`cd \"$D\" 2>/dev/null && pwd || echo \"$D\"`/$B"
 # directory path of the projects dir
 PROJECT_BASE="`cd \"${CODEDIR}/..\" 2>/dev/null && pwd || echo \"${CODEDIR}/..\"`"
 # gff file with GATC genomic positions
-GATC_GFF="${PROJECT_BASE}/COR/DmelGATCfragments-r5_LP120507.gff"
+GATC_GFF="${PROJECT_BASE}/COR/DmelGATCfragments-dm3_LP120507.gff"
 
 # log some bookkeeping
 echo ""
@@ -216,7 +216,7 @@ quit('no')
 
 NOW=`date +%y%m%d%H%M`
 # echo "now = ${NOW}"
-echo "${RSCRIPT}" | R --vanilla > "reads2GATC_Rscript_${NOW}.Rout"
+echo "${RSCRIPT}" | R --no-site-file --no-init-file --no-restore --no-save > "reads2GATC_Rscript_${NOW}.Rout"
 
 exit 0;
 
