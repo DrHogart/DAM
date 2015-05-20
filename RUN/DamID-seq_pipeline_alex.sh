@@ -40,7 +40,7 @@
 #     reads2GATC.sh
 #     - added logging of versionID of current git commit in project home
 #       directory
-#     
+#
 ########################################################################
 
 usage ()
@@ -49,15 +49,16 @@ usage ()
 }
 
 # set code base
-CODEDIR='/home/anton/data/DAM/RUN'
-ALIGN_SCRIPT="${CODEDIR}/align_local_fq_alex.sh"
-READS2GATC_SCRIPT="${CODEDIR}/reads2GATC_alex.sh"
-DSCR=~/data/DAM/RUN/damid_description.csv
+WS_DIR=`pwd | sed -e 's/\/RUN//'`
+CODEDIR="$WS_DIR/RUN"
+ALIGN_SCRIPT="${CODEDIR}/align_local_fq2.sh"
+READS2GATC_SCRIPT="${CODEDIR}/reads2GATC2.sh"
+DSCR="../RUN/damid_description.csv"
 
 ORG_DIR=$PWD
 ALLSPECIES='human fly'
 ALL_ASSEMBLY_HUMAN='hg18 hg19'
-ALL_ASSEMBLY_FLY='dm3 dm4'
+ALL_ASSEMBLY_FLY='dm3 dm6'
 
 ########################################################################
 ######## CHECK PARAMETER FILE ##########################################
