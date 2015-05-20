@@ -41,7 +41,7 @@ fi
 BOWTIE2=bowtie2
 CUTADAPT=cutadapt
 FASTX_REVCOM=fastx_reverse_complement
-BOWTIE2_INDEXES=~/data/DAM/indexes/
+BOWTIE2_INDEXES="/share/db/bowtie_index/dm3/base/"
 
 # echo some versioninfo to log:
 echo 'using bowtie2 version:'
@@ -96,7 +96,7 @@ CLIP_STATS=${OUT_BAM%_local.bam}_local.clip_stats
 # set species and assembly (for read alignment)
 case $2 in
   dm3)
-    ASSEMBLY=dmel_r5.41 ;;
+    ASSEMBLY=dm3 ;;
   hg18)
     ASSEMBLY=hg18 ;;
   hg19)
@@ -328,7 +328,7 @@ CheckExit $? "summing inner and edge reads failed"
 echo '10'
 echo "all nreads after Q_filter: ${CNT_ALL}" >> ${BWT_STATS}
 # removing duplicates from inner reads
-samtools rmdup -s ${TMP_BAM_INNER} tmp.bam
+~/software/samtools/0.1.19/bin/samtools rmdup -s ${TMP_BAM_INNER} tmp.bam
 CheckExit $? "samtools rmdup inner reads failed"
 echo '12'
 ######################################
@@ -346,7 +346,7 @@ mv -f tmp.bam ${TMP_BAM_INNER}
 CheckExit $? "replacing inner reads with unique reads failed"
 echo '13'
 # removing duplicates from edge reads
-samtools rmdup -s ${TMP_BAM_EDGE} tmp.bam
+~/software/samtools/0.1.19/bin/samtools rmdup -s ${TMP_BAM_EDGE} tmp.bam
 CheckExit $? "samtools rmdup edge reads failed"
 echo '14'
 CNT_EDGE_RMDUP=`samtools view -c tmp.bam`
