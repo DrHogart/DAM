@@ -41,8 +41,8 @@ fi
 BOWTIE2=bowtie2
 CUTADAPT=cutadapt
 FASTX_REVCOM=fastx_reverse_complement
-BOWTIE2_INDEXES=~/data/DAM/indexes/
-DSCR=~/data/DAM/RUN/damid_description.csv # path to description file which establishes a correspondence between the file name and its human-readable name.
+BOWTIE2_INDEXES=../indexes/
+DSCR=damid_description.csv # path to description file which establishes a correspondence between the file name and its human-readable name.
 
 # echo some versioninfo to log:
 echo 'using bowtie2 version:'
