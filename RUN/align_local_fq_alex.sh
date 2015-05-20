@@ -38,11 +38,11 @@
 		fi
 
 # set some paths for executables
-		BOWTIE2=bowtie2
-		CUTADAPT=cutadapt
+BOWTIE2=bowtie2
+CUTADAPT=cutadapt
 FASTX_REVCOM=fastx_reverse_complement
-BOWTIE2_INDEXES=~/data/DAM/indexes/
-DSCR=~/data/DAM/RUN/damid_description.csv # path to description file which establishes a correspondence between the file name and its human-readable name.
+BOWTIE2_INDEXES="/share/db/bowtie_index/dm3/base/"
+DSCR=../..//RUN/damid_description.csv # path to description file which establishes a correspondence between the file name and its human-readable name.
 
 # echo some versioninfo to log:
 echo 'using bowtie2 version:'
@@ -120,7 +120,7 @@ CLIP_STATS=${OUT_BAM%_local.bam}_local.clip_stats
 # set species and assembly (for read alignment)
 case $2 in
 dm3)
-ASSEMBLY=dmel_r5.41 ;;
+ASSEMBLY=dm3 ;;
 hg18)
 ASSEMBLY=hg18 ;;
 hg19)
@@ -273,7 +273,7 @@ s2_untrim=$(($s1_untrim-$s2_untrim_gatc))
 			else # Search and SORT reads with edge GATC's
 				cutadapt -g "^GATC" -a "GATC$" -O 4 -e 0.01 --no-trim --untrimmed-output $folder/inner$((13-${count}))-gatcs.fastq $folder/inner$((14-${count}))-gatcs.fastq -o $folder/output$((13-${count}))-gatcs.fastq > $stats/clip_${ins}_gatcs$((13-${count})).stats
 			fi
-			
+
 		done
 
 	#############################
@@ -302,7 +302,7 @@ s2_untrim=$(($s1_untrim-$s2_untrim_gatc))
 			s3_input_untrim_reads=`grep "Processed reads" $stats/clip_orig_len_gatcs$((13-${count})).stats | sed 's/^[a-zA-Z ^t:]*//'`
 		fi
 
-		
+
 
 		s3_input_trim_reads_pct=`bc <<< "scale=4; a=$s0_reads; b=$s3_input_trim_reads; (b/a)*100" | sed 's/[0].$//'`%
 		s3_match_trim_reads_pct=`bc <<< "scale=4; a=$s0_reads; b=$s3_match_trim_reads; (b/a)*100" | sed 's/[0].$//'`%
@@ -397,8 +397,8 @@ s2_untrim=$(($s1_untrim-$s2_untrim_gatc))
 <div class=\"hero-unit\">
 <h1 align=\"center\">Cutadapt report </br><small>from ${fq_base}</small></h1>
 </div>
-<div class=\"row\"> 
-<div class=\"span12\"> 
+<div class=\"row\">
+<div class=\"span12\">
 <h2 align=\"center\">input: <script>document.write(number_format(${s0_reads}, 0, '.', ' '))</script> reads (${s0_reads_pct})</h2> 
 </div>
 </div>
@@ -492,7 +492,8 @@ rm -R $len9 $olen $stats $basef/out*.fastq $basef/untrim_out.fastq $basef/untrim
 # run bowtie on fastq files
 #####################################################
 #Get number of CPU Cores
-CORE=`lscpu | grep 'CPU(s):' | sed -n '1p' | rev | cut -c 1`
+#CORE=`lscpu | grep 'CPU(s):' | sed -n '1p' | rev | cut -c 1`
+CORE=16
 #Run Bowtie
 			       BOWTIE_PAR="-k 3 -p ${CORE} -t --phred33 --local -x ${BOWTIE2_INDEXES}${ASSEMBLY}"
 			       cat ${TMP_FQ_INNER} | (${BOWTIE2} ${BOWTIE_PAR} -U - | samtools view -bS - -o ${TMP_BAM_INNER} ) 2> ${TMP_STATS_INNER}
@@ -538,7 +539,7 @@ CORE=`lscpu | grep 'CPU(s):' | sed -n '1p' | rev | cut -c 1`
 					       echo '5'
 
 ## TODO
-# still need to do something with OUT2.sam and OUT3.sam 
+# still need to do something with OUT2.sam and OUT3.sam
 
 					       cat ${TMP_FQ_EDGE} | (${BOWTIE2} ${BOWTIE_PAR} -U - | samtools view -bS - -o ${TMP_BAM_EDGE} ) 2> ${TMP_STATS_EDGE}
 					       CheckExit $? "bowtie2 failed on edge reads"
@@ -627,7 +628,7 @@ CORE=`lscpu | grep 'CPU(s):' | sed -n '1p' | rev | cut -c 1`
 							       echo '10'
 							       echo "all nreads after Q_filter: ${CNT_ALL}" >> ${BWT_STATS}
 # removing duplicates from inner reads
-							       samtools rmdup -s ${TMP_BAM_INNER} $basef/tmp.bam
+							       ~/software/samtools/0.1.19/bin/samtools rmdup -s ${TMP_BAM_INNER} $basef/tmp.bam
 							       CheckExit $? "samtools rmdup inner reads failed"
 							       echo '12'
 ######################################
@@ -645,7 +646,7 @@ CORE=`lscpu | grep 'CPU(s):' | sed -n '1p' | rev | cut -c 1`
 							       CheckExit $? "replacing inner reads with unique reads failed"
 							       echo '13'
 # removing duplicates from edge reads
-							       samtools rmdup -s ${TMP_BAM_EDGE} $basef/tmp.bam
+							       ~/software/samtools/0.1.19/bin/samtools rmdup -s ${TMP_BAM_EDGE} $basef/tmp.bam
 							       CheckExit $? "samtools rmdup edge reads failed"
 							       echo '14'
 							       CNT_EDGE_RMDUP=`samtools view -c $basef/tmp.bam`
@@ -659,7 +660,7 @@ CORE=`lscpu | grep 'CPU(s):' | sed -n '1p' | rev | cut -c 1`
 							       rm -f $basef/tmp.bam
 							       echo '15'
 ######################################
-# count mito reads 
+# count mito reads
 ######################################
 							       samtools index ${TMP_BAM_EDGE}
 							       CNT_EDGE_MITO=`samtools view -c ${TMP_BAM_EDGE} dmel_mitochondrion_genome`

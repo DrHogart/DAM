@@ -51,8 +51,8 @@
 BOWTIE2=bowtie2
 CUTADAPT=cutadapt
 FASTX_REVCOM=fastx_reverse_complement
-BOWTIE2_INDEXES=~/data/DAM/indexes/
-DSCR=~/data/DAM/RUN/damid_description.csv # path to description file which establishes a correspondence between the file name and its human-readable name.
+BOWTIE2_INDEXES="/share/db/bowtie_index/dm3/base/"
+DSCR=../../RUN/damid_description.csv # path to description file which establishes a correspondence between the file name and its human-readable name.
 
 # echo some versioninfo to log:
 echo 'using bowtie2 version:'
@@ -123,7 +123,7 @@ UNMAPPED_EDGE=${OUT_BAM%_local.bam}_unmappedEdgeReads.txt.gz
 # set species and assembly (for read alignment)
 case $assbly in
 dm3)
-ASSEMBLY=dmel_r5.41 ;;
+ASSEMBLY=dm3 ;;
 hg18)
 ASSEMBLY=hg18 ;;
 hg19)
@@ -531,13 +531,13 @@ if [ "$paired" == "True" ]; then
 	<h1>Paired match statistic <small>for ${header}</small></h1>
 	</div>" >> ${basef}/${fq_stat_name}_report.html
 
-	python /usr/local/bin/paired_sequence_match.py -i " " -v --index-in-memory ${basef}/tmp_fq_inner.F.fastq ${basef}/tmp_fq_inner.R.fastq -p ${basef}/inner_F.fastq -p ${basef}/inner_R.fastq -s ${basef}/single_inner_reads.fastq > ${basef}/paired.stat
+	paired_sequence_match.py -i " " -v --index-in-memory ${basef}/tmp_fq_inner.F.fastq ${basef}/tmp_fq_inner.R.fastq -p ${basef}/inner_F.fastq -p ${basef}/inner_R.fastq -s ${basef}/single_inner_reads.fastq > ${basef}/paired.stat
 		PairedStat ${basef}/paired.stat "inner"
 
-	python /usr/local/bin/paired_sequence_match.py -i " " -v --index-in-memory ${basef}/tmp_fq_edge.F.fastq ${basef}/tmp_fq_edge.R.fastq -p ${basef}/tmp_paired_edge_F.fastq -p ${basef}/tmp_paired_edge_R.fastq -s ${basef}/single_edge_reads.fastq > ${basef}/paired.stat
+	paired_sequence_match.py -i " " -v --index-in-memory ${basef}/tmp_fq_edge.F.fastq ${basef}/tmp_fq_edge.R.fastq -p ${basef}/tmp_paired_edge_F.fastq -p ${basef}/tmp_paired_edge_R.fastq -s ${basef}/single_edge_reads.fastq > ${basef}/paired.stat
 		PairedStat ${basef}/paired.stat  "edge"
 
-	python /usr/local/bin/paired_sequence_match.py -i " " -v --index-in-memory ${basef}/single_edge_reads.fastq ${basef}/single_inner_reads.fastq -p ${basef}/tmp_paired_F.fastq -p ${basef}/tmp_paired_R.fastq -s ${basef}/single_unpaired.fastq > ${basef}/paired.stat
+	paired_sequence_match.py -i " " -v --index-in-memory ${basef}/single_edge_reads.fastq ${basef}/single_inner_reads.fastq -p ${basef}/tmp_paired_F.fastq -p ${basef}/tmp_paired_R.fastq -s ${basef}/single_unpaired.fastq > ${basef}/paired.stat
 		PairedStat ${basef}/paired.stat "unmatched"
 
 	cat ${basef}/tmp_paired_edge_F.fastq ${basef}/tmp_paired_F.fastq > ${basef}/edge_F.fastq
@@ -715,7 +715,7 @@ CheckExit $? "summing inner and edge reads failed"
 echo '10'
 echo "all nreads after Q_filter: ${CNT_ALL}" >> ${BWT_STATS}
 # removing duplicates from inner reads
-samtools rmdup -S ${TMP_BAM_INNER} $basef/tmp.bam
+~/software/samtools/0.1.19/bin/samtools rmdup -S ${TMP_BAM_INNER} $basef/tmp.bam
 CheckExit $? "samtools rmdup inner reads failed"
 echo '12'
 ######################################
@@ -733,7 +733,7 @@ mv -f $basef/tmp.bam ${TMP_BAM_INNER}
 CheckExit $? "replacing inner reads with unique reads failed"
 echo '13'
 # removing duplicates from edge reads
-samtools rmdup -s ${TMP_BAM_EDGE} $basef/tmp.bam
+~/software/samtools/0.1.19/bin/samtools rmdup -s ${TMP_BAM_EDGE} $basef/tmp.bam
 CheckExit $? "samtools rmdup edge reads failed"
 echo '14'
 CNT_EDGE_RMDUP=`samtools view -c $basef/tmp.bam`
