@@ -49,14 +49,15 @@ usage ()
 }
 
 # set code base
-CODEDIR='/home/anton/data/DAM/RUN'
+WS_DIR=`pwd | sed -e 's/\/RUN//'`
+CODEDIR="$WS_DIR/RUN"
 ALIGN_SCRIPT="${CODEDIR}/align_local_fq.sh"
 READS2GATC_SCRIPT="${CODEDIR}/reads2GATC.sh"
 
 ORG_DIR=$PWD
 ALLSPECIES='human fly'
 ALL_ASSEMBLY_HUMAN='hg18 hg19'
-ALL_ASSEMBLY_FLY='dm3 dm4'
+ALL_ASSEMBLY_FLY='dm3 dm6'
 
 ########################################################################
 ######## CHECK PARAMETER FILE ##########################################
